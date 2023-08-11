@@ -276,6 +276,27 @@ func (tail *Tail) reopen(truncated bool) error {
 	return nil
 }
 
+// 以回车或换行控制字符分割读取
+func (tail *Tail) readDelim() (string, error) {
+	var lineBuf strings.Builder
+	tail.lk.Lock()
+	defer tail.lk.Unlock()
+	for {
+		char, _, err := tail.reader.ReadRune() // 逐个读取字符
+		if err != nil {
+			return lineBuf.String(), err
+		}
+
+		// 控制字符^M(回车符) 或 ^J(换行符\n)
+		if char == 13 || char == 10 {
+			return lineBuf.String(), nil
+		}
+		lineBuf.WriteRune(char)
+	}
+
+	return lineBuf.String(), io.EOF
+}
+
 func (tail *Tail) readLine() (string, error) {
 	tail.lk.Lock()
 	line, err := tail.reader.ReadString('\n')
@@ -335,7 +356,7 @@ func (tail *Tail) tailFileSync() {
 			}
 		}
 
-		line, err := tail.readLine()
+		line, err := tail.readDelim()
 
 		// Process `line` even if err is EOF.
 		if err == nil {
