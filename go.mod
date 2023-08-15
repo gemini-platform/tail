@@ -2,7 +2,7 @@ module github.com/grafana/tail
 
 go 1.13
 
-//replace github.com/grafana/tail v0.0.0-20230510142333-77b18831edf0 => github.com/gemini-platform/tail v0.0.0-20230811091619-3010548ca6d5
+replace github.com/grafana/tail v0.0.0-20230510142333-77b18831edf0 => github.com/gemini-platform/tail v0.0.0-20230811091619-3010548ca6d5
 
 require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
