@@ -289,6 +289,7 @@ func (tail *Tail) readDelim() (string, error) {
 
 		// 控制字符^M(回车符) 或 ^J(换行符\n)
 		if char == 13 || char == 10 {
+			fmt.Println("修改点触发=====>, 此处换行")
 			return lineBuf.String(), nil
 		}
 		lineBuf.WriteRune(char)
